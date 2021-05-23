@@ -1,5 +1,6 @@
-import React, {createContext, useState} from 'react';
-import { USER_GET, TOKEN_POST } from '../Service/api';
+import React, {createContext, useState, useEffect} from 'react';
+import { USER_GET, TOKEN_POST, TOKEN_VALIDATE_POST } from '../Service/api';
+import { useNavigate } from 'react-router-dom';
 
 export const UserContext = createContext();
 
@@ -8,6 +9,19 @@ export const UserStorage = ({ children }) => {
     const [login, setLogin] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    const userLogout = React.useCallback(
+        async function () {
+            setData(null);
+            setError(null);
+            setLoading(false);
+            setLogin(false);
+            window.localStorage.removeItem('token');
+            navigate('/login');
+        },
+        [navigate],
+    );
 
     async function getUser(token) {
         const {url, options} = USER_GET(token);
@@ -19,17 +33,59 @@ export const UserStorage = ({ children }) => {
     }
 
     async function userLogin(username, password) {
-        const {url, options} = TOKEN_POST({username, password});
-        const tokenRes = await fetch(url, options);
-        const { token } = await tokenRes.json();
+        try {
+            setError(null)
+            setLoading(true);
 
-        window.localStorage.setItem('token', token);
+            const {url, options} = TOKEN_POST({username, password});
+            const tokenRes = await fetch(url, options);
 
-        getUser(token)
+            if(!tokenRes.ok) throw new Error(`Error: ${tokenRes.statusText}`)
+
+            const { token } = await tokenRes.json();
+    
+            window.localStorage.setItem('token', token);
+    
+            await getUser(token) 
+            navigate('/conta');   
+        } catch (err) {
+            setError(err.message);
+            setLogin(false);
+        } finally {
+            setLoading(false);
+
+        }
+        
     }
+
+    useEffect(() => {
+        async function  autoLogin() {
+            const token = window.localStorage.getItem('token');
+            if (token) {
+                try {
+                    setError(null);
+                    setLoading(true);
+                    const { url, options } = TOKEN_VALIDATE_POST(token);
+                    const response = await fetch(url, options);
+                    
+                    if(!response.ok) throw new Error('token inválido');
+
+                    await getUser(token);    
+                } catch (error) {
+                    userLogout();
+                    console.log('Logou forçado por error: linha 27 do userContex');
+                } finally {
+                    setLoading(false);
+                }
+            }
+        }
+
+        autoLogin();
+    }, [userLogout]);
+
     
     return (
-        <UserContext.Provider value={{ userLogin, data }}>
+        <UserContext.Provider value={{ userLogin, userLogout, data, error, loading, login }}>
             {children}
         </UserContext.Provider>
     )
