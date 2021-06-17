@@ -6,15 +6,15 @@ import { COMMENT_POST } from '../../Service/api';
 
 const PhotoCommentsForm = ({ id, setComments }) => {
     const [comment, setComment] = React.useState('');
-    const {request, error} = useFetch();
+    const { request, error } = useFetch();
 
     async function handleSubmit(e){
         e.preventDefault();
 
-        const {url, options} = COMMENT_POST(id, {comment});
+        const { url, options } = COMMENT_POST(id, { comment });
         const { response, json } = await request(url, options);
         if(response.ok) {
-            setComments('');
+            setComment('');
             setComments((comments) => [...comments, json]);
         }
     }
@@ -26,8 +26,8 @@ const PhotoCommentsForm = ({ id, setComments }) => {
                 id="comment"
                 placeholder="Comente..."
                 value={comment}
-                onChange={({target}) => setComment(target.value)} 
-            />
+                onChange={({ target }) => setComment(target.value)}
+                />
             <button>
                 <Enviar />
             </button>
