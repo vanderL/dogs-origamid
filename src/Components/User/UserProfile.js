@@ -9,7 +9,7 @@ const UserProfile = () => {
         <section className="container mainSection">
             <h1 className="title">{user}</h1>
             <Feed user={user}/>
-        </section>
+        </section> 
     )
 }
 
