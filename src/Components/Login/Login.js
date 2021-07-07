@@ -22,7 +22,6 @@ const Login = () => {
                     <Route path="perdeu" element={<LoginPasswordLost />}/>
                     <Route path="reset" element={<LoginPasswordReset />}/>
                     <Route path ='*' element={<NotFound />} />
-
                 </Routes>
             </div>
         </section>
