@@ -4,6 +4,7 @@ import Button from '../Forms/Button';
 import useForm from '../../Hooks/useForm';
 import useFetch from '../../Hooks/useFetch';
 import { PASSWORD_LOST } from '../../Service/api';
+import Head from '../../Helper/Head';
 import Error from '../../Helper/Error'
 
 const LoginPasswordLost = () => {
@@ -24,6 +25,7 @@ const LoginPasswordLost = () => {
 
     return (
         <section>
+            <Head title="Perdeu a senha?" />
             <h1 className="title"> Perdeu a senha? </h1>
 
             {data ? (
