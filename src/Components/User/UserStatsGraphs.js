@@ -13,15 +13,13 @@ const UserStatsGraphs = ({data}) => {
                 y: Number(item.acessos)
             }
         })
-
- 
-        setTotal(
-            data.map(({acessos}) => Number(acessos)).reduce((before, after) => before + after)
-        );
+  
+        data.length > 0 && setTotal(data.map(({acessos}) => Number(acessos)).reduce((before, after) => before + after))
+        
         setGraph(graphData)
         console.log(data)
     }, [data])
-
+    if (data.length > 0)
     return (
         <section className={`${styles.graph} animeLeft`}>
             <div className={`${styles.total} ${styles.graphItem}`}>
@@ -52,6 +50,16 @@ const UserStatsGraphs = ({data}) => {
             </div>
         </section>
     )
+    else return (
+        <section className={`${styles.graph} animeLeft`}>
+            <div className={`${styles.total} ${styles.graphItem}`}>
+                <p>Total de acessos: {total}</p>
+            </div>
+            <div>
+                Nada por aqui
+            </div>
+        </section>
+    );
 }
 
 export default UserStatsGraphs;
