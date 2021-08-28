@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { UserContext } from '../../Context/UserContext';
 
 import {ReactComponent as MinhasFotos} from '../../Assets/feed.svg';
 import {ReactComponent as Estatisticas} from '../../Assets/estatisticas.svg';
@@ -9,9 +8,12 @@ import {ReactComponent as Sair} from '../../Assets/sair.svg';
 
 import styles from './UserHeaderNav.module.css';
 import useMedia from '../../Hooks/useMedia';
+import { useDispatch } from 'react-redux';
+import { userLogout } from '../../store/user';
 
 const UserHeaderNav = () => {
-    const { userLogout } = React.useContext(UserContext);
+    const dispatch = useDispatch();
+
     const mobile = useMedia('(max-width: 40rem)');
     const [mobileMenu, setMobileMenu] = React.useState(false);
 
@@ -51,7 +53,7 @@ const UserHeaderNav = () => {
                     {mobile && 'Adicionar Fotos'}
                 </NavLink>
                 
-                <button onClick={userLogout}>
+                <button onClick={() => dispatch(userLogout)}>
                     {''}
                     <Sair />
                     {mobile && 'sair'}

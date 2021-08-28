@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 const User = () => {
 
     const {data} = useSelector(state => state.user);
+    console.log(data)
 
     return (
         <section className="container">
