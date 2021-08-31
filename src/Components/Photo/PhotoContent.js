@@ -6,7 +6,7 @@ import PhotoDelete from './PhotoDelete';
 import Image from '../../Helper/Image';
 import { useSelector } from 'react-redux';
 
-const PhotoContent = ({ data, single }) => {
+const PhotoContent = ({ single }) => {
     const {user} = useSelector(state => state);
 
     const {photo, comments} = useSelector(state => state.photo.data)
